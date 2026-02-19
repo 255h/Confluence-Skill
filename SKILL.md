@@ -67,7 +67,8 @@ python3 scripts/confluence.py check-setup
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `get-content <page_id>` | Get page content (HTML storage format) | `confluence get-content 123456` |
+| `get-content <page_id> [version]` | Get page content (HTML storage format) | `confluence get-content 123456` |
+| `get-content <page_id> <version>` | Get page content by version | `confluence get-content 123456 3` |
 | `set-content <page_id> <file>` | Update page content from HTML file | `confluence set-content 123456 content.html` |
 | `get-title <page_id>` | Get page title | `confluence get-title 123456` |
 | `set-title <page_id> <title>` | Update page title | `confluence set-title 123456 "New Title"` |
@@ -87,12 +88,17 @@ When presented with url that contains 'spaces/<space>/pages/<number>'  number af
 Get the page content in Confluence Storage Format (XHTML):
 
 ```bash
-python3 scripts/confluence.py get-content <page_id>
+python3 scripts/confluence.py get-content <page_id> [version]
 ```
 
-Example:
+**Current version:**
 ```bash
 python3 scripts/confluence.py get-content 123456
+```
+
+**Specific version:**
+```bash
+python3 scripts/confluence.py get-content 123456 3
 ```
 
 Output: HTML storage format content
@@ -221,6 +227,15 @@ See `references/storage-format-reference.md` for complete syntax and examples.
 python3 scripts/confluence.py get-title 123456
 python3 scripts/confluence.py get-version 123456
 python3 scripts/confluence.py get-content 123456
+```
+
+### Example 1b: Read Page by Version
+
+```bash
+# Get specific version of page content
+python3 scripts/confluence.py get-title 123456
+python3 scripts/confluence.py get-version 123456
+python3 scripts/confluence.py get-content 123456 3
 ```
 
 ### Example 2: Update Page Content Only
