@@ -233,8 +233,6 @@ python3 scripts/confluence.py get-content 123456
 
 ```bash
 # Get specific version of page content
-python3 scripts/confluence.py get-title 123456
-python3 scripts/confluence.py get-version 123456
 python3 scripts/confluence.py get-content 123456 3
 ```
 
