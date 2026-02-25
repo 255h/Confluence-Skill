@@ -40,6 +40,7 @@ def get_headers():
 def api_request(method, path, **kwargs):
     url = f"{get_base_url()}/rest/api/{path}"
     response = requests.request(method, url, verify=False, **kwargs)
+
     if response.status_code == 200:
         return response
     print(
@@ -76,6 +77,14 @@ def put_page_data(page_id, title, version, content=None):
         "put", f"content/{page_id}", headers=get_headers(), json=body
     ).json()
 
+def search_pages_by_content(text):
+    params = {}
+    cql = f"text~\"{text}\""
+    params["cql"] = cql
+    params["limit"] = 25
+
+    return api_request( "get", f"content/search", headers=get_headers(), params=params).json()
+
 
 def print_usage():
     print("Usage: confluence <command> [arguments]", file=sys.stderr)
@@ -90,6 +99,7 @@ def print_usage():
     )
     print("  get-title <page_id>            Get page title", file=sys.stderr)
     print("  set-title <page_id> <title>    Set page title", file=sys.stderr)
+    print("  search-text <text>             Get pages objects, containing text", file=sys.stderr)
     print(
         "  check-setup                    Check if environment variables are set",
         file=sys.stderr,
@@ -145,6 +155,14 @@ def cmd_set_title(args):
     version = int(data["version"]["number"]) + 1
     put_page_data(page_id, title, version)
 
+def cmd_search_text(args):
+    if len(args) != 1:
+        print("Usage: confluence search-text <text>", file=sys.stderr)
+        sys.exit(1)
+    text = args[0]
+
+    data = search_pages_by_content(text)
+    print(data)
 
 def cmd_check_setup(args):
     if args:
@@ -180,6 +198,7 @@ def main():
         "get-title": cmd_get_title,
         "set-title": cmd_set_title,
         "check-setup": cmd_check_setup,
+        "search-text": cmd_search_text,
     }
     if command in commands:
         commands[command](args)

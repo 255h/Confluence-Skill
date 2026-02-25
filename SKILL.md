@@ -17,10 +17,11 @@ description: Read/Update confluence page. Use when asked to "read confluence pag
 
 ## Purpose
 
-This skill enables reading and updating Confluence pages using the API. It supports:
+This skill enables reading, serching and updating Confluence pages using the API. It supports:
 
 - **Reading**: Get page content, title, and version information
 - **Updating**: Modify page content, title, or both
+- **Searching**: Search any confluence objects (pages, attachements and etc.) by content
 
 ## When to Use This Skill
 
@@ -31,6 +32,7 @@ This skill enables reading and updating Confluence pages using the API. It suppo
 - Update page content (e.g., "Update page 1234 with new content")
 - Update page title (e.g., "Rename page 1234 to 'New Title'")
 - Update both content and title in a single operation
+- Search confluence objects
 
 **Activate when:**
 
@@ -38,6 +40,7 @@ This skill enables reading and updating Confluence pages using the API. It suppo
 - User wants to review or modify existing Confluence documentation
 - User needs to programmatically update Confluence content
 - User provided link to confluence page (e.g., "https://<site>/spaces/<space>/pages/<number>")
+- User wants search confluence objects by content
 
 **Do not activate for:**
 
@@ -73,6 +76,7 @@ python3 scripts/confluence.py check-setup
 | `get-title <page_id>` | Get page title | `confluence get-title 123456` |
 | `set-title <page_id> <title>` | Update page title | `confluence set-title 123456 "New Title"` |
 | `get-version <page_id>` | Get current version number | `confluence get-version 123456` |
+| `search-text <text>` | Search text in content | `confluence search "ABAP code"` |
 | `check-setup` | Verify environment variables | `confluence check-setup` |
 
 ## Detailed Usage
