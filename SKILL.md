@@ -17,10 +17,11 @@ description: Read/Update confluence page. Use when asked to "read confluence pag
 
 ## Purpose
 
-This skill enables reading and updating Confluence pages using the API. It supports:
+This skill enables reading, serching and updating Confluence pages using the API. It supports:
 
 - **Reading**: Get page content, title, and version information
 - **Updating**: Modify page content, title, or both
+- **Searching**: Search any confluence pages by content
 
 ## When to Use This Skill
 
@@ -31,6 +32,7 @@ This skill enables reading and updating Confluence pages using the API. It suppo
 - Update page content (e.g., "Update page 1234 with new content")
 - Update page title (e.g., "Rename page 1234 to 'New Title'")
 - Update both content and title in a single operation
+- Search confluence pages
 
 **Activate when:**
 
@@ -38,6 +40,7 @@ This skill enables reading and updating Confluence pages using the API. It suppo
 - User wants to review or modify existing Confluence documentation
 - User needs to programmatically update Confluence content
 - User provided link to confluence page (e.g., "https://<site>/spaces/<space>/pages/<number>")
+- User wants search confluence pages by content
 
 **Do not activate for:**
 
@@ -73,6 +76,7 @@ python3 scripts/confluence.py check-setup
 | `get-title <page_id>` | Get page title | `confluence get-title 123456` |
 | `set-title <page_id> <title>` | Update page title | `confluence set-title 123456 "New Title"` |
 | `get-version <page_id>` | Get current version number | `confluence get-version 123456` |
+| `search-text <text>` | Search text in content pages | `confluence search "ABAP code"` |
 | `check-setup` | Verify environment variables | `confluence check-setup` |
 
 ## Detailed Usage
@@ -132,6 +136,29 @@ python3 scripts/confluence.py get-version 123456
 ```
 
 Output: `5` (current version number)
+
+### Searching Pages Contenting Text
+
+Get a list of elements consisting of the ID and Title of pages containing given text
+
+```bash
+python3 scripts/confluence.py search-text <text>
+```
+
+Example:
+```bash
+python3 scripts/confluence.py search-text <ABAP code>
+```
+Output: 
+```
+ID: 4884625
+Title: Inserting ABAP code into an article
+--------------------------------------------------
+ID: 17485727
+Title: ABAP code security
+--------------------------------------------------
+```
+
 
 ### Updating Page Content
 
@@ -315,6 +342,27 @@ Alice -> Bob: Hello
 
 See `references/storage-format-reference.md` → "UML macros" section.
 Do not attempt to attach image file.
+
+### Example 7: Seach pages containing text "ABAP"
+To search pages containing text "ABAP" need execute
+
+```bash
+python3 scripts/confluence.py search-text "ABAP"
+```
+The result will be a list of ID and Title for pages containing the word ABAP.
+
+```
+ID: 404863465
+Title: ABAP classes for working with Opentext
+--------------------------------------------------
+ID: 825442382
+Title: ABAP Q4_S2 ( 01.11 - 30.11 )
+--------------------------------------------------
+ID: 47419902
+Title: Assigning normal and urgent changes (corrections) to ABAP developers
+--------------------------------------------------
+```
+
 
 ## Troubleshooting
 
