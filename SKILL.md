@@ -152,10 +152,10 @@ python3 scripts/confluence.py search-text <ABAP code>
 Output: 
 ```
 ID: 4884625
-Title: Вставка ABAP кода в статью
+Title: Inserting ABAP code into an article
 --------------------------------------------------
 ID: 17485727
-Title: Безопасность ABAP кода
+Title: ABAP code security
 --------------------------------------------------
 ```
 
@@ -353,13 +353,13 @@ The result will be a list of ID and Title for pages containing the word ABAP.
 
 ```
 ID: 404863465
-Title: СПР.22. ABAP классы для работы с карточкой аналогов в OpenText
+Title: ABAP classes for working with Opentext
 --------------------------------------------------
 ID: 825442382
 Title: ABAP Q4_S2 ( 01.11 - 30.11 )
 --------------------------------------------------
 ID: 47419902
-Title: #3.SM. Назначение нормального и срочного изменения (корректруры) на разработчиков ABAP
+Title: Assigning normal and urgent changes (corrections) to ABAP developers
 --------------------------------------------------
 ```
 
