@@ -79,7 +79,7 @@ def put_page_data(page_id, title, version, content=None):
 
 def search_pages_by_content(text):
     params = {}
-    cql = f"text~\"{text}\""
+    cql = f"text~\"{text}\" and type=\"page\""
     params["cql"] = cql
     params["limit"] = 25
 
@@ -162,7 +162,16 @@ def cmd_search_text(args):
     text = args[0]
 
     data = search_pages_by_content(text)
-    print(data)
+    results = data["results"]
+    print(f"Найдено {len(results)} страниц:\n")
+
+    for item in results:
+        page_id = item.get("id", "N/A")
+        title = item.get("title", "N/A")
+        print(f"ID: {page_id}")
+        print(f"Title: {title}")
+        print("-" * 50)        
+    # print(data)
 
 def cmd_check_setup(args):
     if args:
