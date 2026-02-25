@@ -163,15 +163,12 @@ def cmd_search_text(args):
 
     data = search_pages_by_content(text)
     results = data["results"]
-    print(f"Найдено {len(results)} страниц:\n")
+    print(f"Found {len(results)} pages:\n")
 
     for item in results:
         page_id = item.get("id", "N/A")
         title = item.get("title", "N/A")
-        print(f"ID: {page_id}")
-        print(f"Title: {title}")
-        print("-" * 50)        
-    # print(data)
+        print(f"ID: {page_id}; Title: {title}")
 
 def cmd_check_setup(args):
     if args:
