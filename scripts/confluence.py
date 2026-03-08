@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import os
-from typing import Any
 import requests
 import urllib3
 
@@ -38,7 +37,7 @@ def get_headers() -> dict[str, str]:
     }
 
 
-def api_request(method: str, path: str, **kwargs):
+def api_request(method: str, path: str, **kwargs) -> requests.Response:
     url = f"{get_base_url()}/rest/api/{path}"
     response = requests.request(method, url, verify=False, **kwargs)
 
@@ -52,7 +51,7 @@ def api_request(method: str, path: str, **kwargs):
     sys.exit(1)
 
 
-def get_page_data(page_id, expand=None, version=None):
+def get_page_data(page_id: str, expand: str | None = None, version: int | None = None) -> dict:
     params = {}
     if expand:
         params["expand"] = expand
@@ -63,7 +62,7 @@ def get_page_data(page_id, expand=None, version=None):
     ).json()
 
 
-def put_page_data(page_id, title, version, content=None):
+def put_page_data(page_id: str, title:str, version:int, content: str | None = None) -> dict:
     body = {
         "id": page_id,
         "type": "page",
@@ -79,7 +78,7 @@ def put_page_data(page_id, title, version, content=None):
     ).json()
 
 
-def search_pages_by_content(text: str) -> dict[str, list[dict[str,str]]]:
+def search_pages_by_content(text: str) -> dict:
     params = {}
     cql = f'text~"{text}" and type="page"'
     params["cql"] = cql
@@ -118,7 +117,13 @@ def cmd_get_content(args: list[str]) -> None:
         print("Usage: confluence get-content <page_id> [version]", file=sys.stderr)
         sys.exit(1)
     page_id = args[0]
-    version = args[1] if len(args) == 2 else None
+    
+    try:
+        version = int(args[1]) if len(args) == 2 else None
+    except ValueError:
+        print(f"Error: Version must be a number, but got '{args[1]}'", file=sys.stderr)
+        sys.exit(1)
+    
     data = get_page_data(page_id, "body.storage", version)
     print(data["body"]["storage"]["value"])
 
