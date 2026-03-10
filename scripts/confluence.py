@@ -9,11 +9,11 @@ BASE_URL_VAR = "CONFLUENCE_BASE_URL"
 API_KEY_VAR = "CONFLUENCE_API_KEY"
 
 
-def env_error(name):
+def env_error(name: str) -> str:
     return f"Error: {name} environment variable not set"
 
 
-def get_base_url():
+def get_base_url() -> str:
     url = os.environ.get(BASE_URL_VAR)
     if not url:
         print(env_error(BASE_URL_VAR), file=sys.stderr)
@@ -21,7 +21,7 @@ def get_base_url():
     return url
 
 
-def get_api_key():
+def get_api_key() -> str:
     key = os.environ.get(API_KEY_VAR)
     if not key:
         print(env_error(API_KEY_VAR), file=sys.stderr)
@@ -29,7 +29,7 @@ def get_api_key():
     return key
 
 
-def get_headers():
+def get_headers() -> dict[str, str]:
     return {
         "X-Atlassian-Token": "no-check",
         "Authorization": f"Bearer {get_api_key()}",
@@ -37,7 +37,7 @@ def get_headers():
     }
 
 
-def api_request(method, path, **kwargs):
+def api_request(method: str, path: str, **kwargs) -> requests.Response:
     url = f"{get_base_url()}/rest/api/{path}"
     response = requests.request(method, url, verify=False, **kwargs)
 
@@ -51,7 +51,7 @@ def api_request(method, path, **kwargs):
     sys.exit(1)
 
 
-def get_page_data(page_id, expand=None, version=None):
+def get_page_data(page_id: str, expand: str | None = None, version: int | None = None) -> dict:
     params = {}
     if expand:
         params["expand"] = expand
@@ -62,7 +62,7 @@ def get_page_data(page_id, expand=None, version=None):
     ).json()
 
 
-def put_page_data(page_id, title, version, content=None):
+def put_page_data(page_id: str, title:str, version:int, content: str | None = None) -> dict:
     body = {
         "id": page_id,
         "type": "page",
@@ -77,16 +77,19 @@ def put_page_data(page_id, title, version, content=None):
         "put", f"content/{page_id}", headers=get_headers(), json=body
     ).json()
 
-def search_pages_by_content(text):
+
+def search_pages_by_content(text: str) -> dict:
     params = {}
-    cql = f"text~\"{text}\" and type=\"page\""
+    cql = f'text~"{text}" and type="page"'
     params["cql"] = cql
     params["limit"] = 25
 
-    return api_request( "get", f"content/search", headers=get_headers(), params=params).json()
+    return api_request(
+        "get", "content/search", headers=get_headers(), params=params
+    ).json()
 
 
-def print_usage():
+def print_usage() -> None:
     print("Usage: confluence <command> [arguments]", file=sys.stderr)
     print("Commands:", file=sys.stderr)
     print("  get-content <page_id> [version] Get page content (HTML)", file=sys.stderr)
@@ -99,24 +102,33 @@ def print_usage():
     )
     print("  get-title <page_id>            Get page title", file=sys.stderr)
     print("  set-title <page_id> <title>    Set page title", file=sys.stderr)
-    print("  search-text <text>             Get pages objects, containing text", file=sys.stderr)
+    print(
+        "  search-text <text>             Get pages objects, containing text",
+        file=sys.stderr,
+    )
     print(
         "  check-setup                    Check if environment variables are set",
         file=sys.stderr,
     )
 
 
-def cmd_get_content(args):
+def cmd_get_content(args: list[str]) -> None:
     if len(args) < 1 or len(args) > 2:
         print("Usage: confluence get-content <page_id> [version]", file=sys.stderr)
         sys.exit(1)
     page_id = args[0]
-    version = args[1] if len(args) == 2 else None
+    
+    try:
+        version = int(args[1]) if len(args) == 2 else None
+    except ValueError:
+        print(f"Error: Version must be a number, but got '{args[1]}'", file=sys.stderr)
+        sys.exit(1)
+    
     data = get_page_data(page_id, "body.storage", version)
     print(data["body"]["storage"]["value"])
 
 
-def cmd_set_content(args):
+def cmd_set_content(args: list[str]) -> None:
     if len(args) != 2:
         print("Usage: confluence set-content <page_id> <html_file>", file=sys.stderr)
         sys.exit(1)
@@ -128,7 +140,7 @@ def cmd_set_content(args):
     put_page_data(page_id, data["title"], version, content)
 
 
-def cmd_get_version(args):
+def cmd_get_version(args: list[str]) -> None:
     if len(args) != 1:
         print("Usage: confluence get-version <page_id>", file=sys.stderr)
         sys.exit(1)
@@ -137,7 +149,7 @@ def cmd_get_version(args):
     print(data["version"]["number"])
 
 
-def cmd_get_title(args):
+def cmd_get_title(args: list[str]) -> None:
     if len(args) != 1:
         print("Usage: confluence get-title <page_id>", file=sys.stderr)
         sys.exit(1)
@@ -146,7 +158,7 @@ def cmd_get_title(args):
     print(data["title"])
 
 
-def cmd_set_title(args):
+def cmd_set_title(args: list[str]) -> None:
     if len(args) != 2:
         print("Usage: confluence set-title <page_id> <title>", file=sys.stderr)
         sys.exit(1)
@@ -155,7 +167,8 @@ def cmd_set_title(args):
     version = int(data["version"]["number"]) + 1
     put_page_data(page_id, title, version)
 
-def cmd_search_text(args):
+
+def cmd_search_text(args: list[str]) -> None:
     if len(args) != 1:
         print("Usage: confluence search-text <text>", file=sys.stderr)
         sys.exit(1)
@@ -170,7 +183,8 @@ def cmd_search_text(args):
         title = item.get("title", "N/A")
         print(f"ID: {page_id}; Title: {title}")
 
-def cmd_check_setup(args):
+
+def cmd_check_setup(args: list[str]) -> None:
     if args:
         print("Usage: confluence check-setup", file=sys.stderr)
         sys.exit(1)
@@ -190,7 +204,7 @@ def cmd_check_setup(args):
     print(f"API Key: {key[:4]}...{key[-4:]}")
 
 
-def main():
+def main() -> None:
     urllib3.disable_warnings()
     if len(sys.argv) < 2:
         print_usage()
