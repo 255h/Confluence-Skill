@@ -52,8 +52,14 @@ This skill enables reading, serching and updating Confluence pages using the API
 
 Before using this skill, verify environment variables are set:
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py check-setup
+scripts\confluence-skill.exe check-setup
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill check-setup
 ```
 
 **Required environment variables:**
@@ -63,21 +69,19 @@ python3 scripts/confluence.py check-setup
 | `CONFLUENCE_BASE_URL` | Your Confluence instance URL | Confluence Settings → Advanced Settings |
 | `CONFLUENCE_API_KEY` | API authentication token | Atlassian Account → API Tokens |
 
-**Note:** The script uses `verify=False` for SSL verification. In production, consider setting up proper SSL certificates or using `curl -k` equivalent.
-
 ## Quick Reference
 
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `get-content <page_id> [version]` | Get page content (HTML storage format) | `confluence get-content 123456` |
-| `get-content <page_id> <version>` | Get page content by version | `confluence get-content 123456 3` |
-| `set-content <page_id> <file>` | Update page content from HTML file | `confluence set-content 123456 content.html` |
-| `get-title <page_id>` | Get page title | `confluence get-title 123456` |
-| `set-title <page_id> <title>` | Update page title | `confluence set-title 123456 "New Title"` |
-| `get-version <page_id>` | Get current version number | `confluence get-version 123456` |
-| `search-text <text>` | Search text in content pages | `confluence search "ABAP code"` |
-| `check-setup` | Verify environment variables | `confluence check-setup` |
+| `get-content <page_id> [version]` | Get page content (HTML storage format) | `scripts/confluence-skill get-content 123456` |
+| `get-content <page_id> <version>` | Get page content by version | `scripts/confluence-skill get-content 123456 3` |
+| `set-content <page_id> <file>` | Update page content from HTML file | `scripts/confluence-skill set-content 123456 content.html` |
+| `get-title <page_id>` | Get page title | `scripts/confluence-skill get-title 123456` |
+| `set-title <page_id> <title>` | Update page title | `scripts/confluence-skill set-title 123456 "New Title"` |
+| `get-version <page_id>` | Get current version number | `scripts/confluence-skill get-version 123456` |
+| `search-text <text>` | Search text in content pages | `scripts/confluence-skill search "ABAP code"` |
+| `check-setup` | Verify environment variables | `scripts/confluence-skill check-setup` |
 
 ## Detailed Usage
 
@@ -91,18 +95,24 @@ When presented with url that contains 'spaces/<space>/pages/<number>'  number af
 
 Get the page content in Confluence Storage Format (XHTML):
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py get-content <page_id> [version]
+scripts\confluence-skill.exe get-content <page_id> [version]
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill get-content <page_id> [version]
 ```
 
 **Current version:**
 ```bash
-python3 scripts/confluence.py get-content 123456
+scripts/confluence-skill get-content 123456
 ```
 
 **Specific version:**
 ```bash
-python3 scripts/confluence.py get-content 123456 3
+scripts/confluence-skill get-content 123456 3
 ```
 
 Output: HTML storage format content
@@ -111,13 +121,19 @@ Output: HTML storage format content
 
 Get the page title:
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py get-title <page_id>
+scripts\scripts\\confluence-skill.exe get-title <page_id>
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill get-title <page_id>
 ```
 
 Example:
 ```bash
-python3 scripts/confluence.py get-title 123456
+scripts/confluence-skill get-title 123456
 ```
 
 Output: `Page Title`
@@ -126,13 +142,19 @@ Output: `Page Title`
 
 Get the current version number (required before updating):
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py get-version <page_id>
+scripts\confluence-skill.exe get-version <page_id>
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill get-version <page_id>
 ```
 
 Example:
 ```bash
-python3 scripts/confluence.py get-version 123456
+scripts/confluence-skill get-version 123456
 ```
 
 Output: `5` (current version number)
@@ -141,13 +163,19 @@ Output: `5` (current version number)
 
 Get a list of elements consisting of the ID and Title of pages containing given text
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py search-text <text>
+scripts\\confluence-skill.exe search-text <text>
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill search-text <text>
 ```
 
 Example:
 ```bash
-python3 scripts/confluence.py search-text <ABAP code>
+scripts/confluence-skill search-text "ABAP code"
 ```
 Output: 
 ```
@@ -164,8 +192,14 @@ Title: ABAP code security
 
 Update page content from an HTML file:
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py set-content <page_id> <html_file>
+scripts\\confluence-skill.exe set-content <page_id> <html_file>
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill set-content <page_id> <html_file>
 ```
 
 The script automatically:
@@ -176,26 +210,32 @@ The script automatically:
 Example:
 ```bash
 # Get current content, modify it, save to file
-python3 scripts/confluence.py get-content 123456 > content.html
+scripts/confluence-skill get-content 123456 > content.html
 
 # Edit content.html with your changes
 # ...
 
 # Upload updated content
-python3 scripts/confluence.py set-content 123456 content.html
+scripts/confluence-skill set-content 123456 content.html
 ```
 
 ### Updating Page Title
 
 Update the page title:
 
+**For Windows:**
 ```bash
-python3 scripts/confluence.py set-title <page_id> <new_title>
+scripts\\confluence-skill.exe set-title <page_id> <new_title>
+```
+
+**For Linux/macOS:**
+```bash
+scripts/confluence-skill set-title <page_id> <new_title>
 ```
 
 Example:
 ```bash
-python3 scripts/confluence.py set-title 123456 "Updated Project Documentation"
+scripts/confluence-skill set-title 123456 "Updated Project Documentation"
 ```
 
 ### Updating Both Content and Title
@@ -204,12 +244,12 @@ To update both content and title:
 
 1. Update content first:
 ```bash
-python3 scripts/confluence.py set-content 123456 new_content.html
+scripts/confluence-skill set-content 123456 new_content.html
 ```
 
 2. Then update title:
 ```bash
-python3 scripts/confluence.py set-title 123456 "New Title"
+scripts/confluence-skill set-title 123456 "New Title"
 ```
 
 **Note:** Each update increments the version number independently.
@@ -251,62 +291,62 @@ See `references/storage-format-reference.md` for complete syntax and examples.
 
 ```bash
 # Get page information
-python3 scripts/confluence.py get-title 123456
-python3 scripts/confluence.py get-version 123456
-python3 scripts/confluence.py get-content 123456
+scripts/confluence-skill get-title 123456
+scripts/confluence-skill get-version 123456
+scripts/confluence-skill get-content 123456
 ```
 
 ### Example 1b: Read Page by Version
 
 ```bash
 # Get specific version of page content
-python3 scripts/confluence.py get-content 123456 3
+scripts/confluence-skill get-content 123456 3
 ```
 
 ### Example 2: Update Page Content Only
 
 ```bash
 # Get current content
-python3 scripts/confluence.py get-content 123456 > page.html
+scripts/confluence-skill get-content 123456 > page.html
 
 # Edit page.html with your changes
 # ...
 
 # Update content (version auto-increments)
-python3 scripts/confluence.py set-content 123456 page.html
+scripts/confluence-skill set-content 123456 page.html
 ```
 
 ### Example 3: Rename Page
 
 ```bash
 # Get current information
-python3 scripts/confluence.py get-title 123456
+scripts/confluence-skill get-title 123456
 
 # Update title (version auto-increments)
-python3 scripts/confluence.py set-title 123456 "New Project Name"
+scripts/confluence-skill set-title 123456 "New Project Name"
 
 # Verify update
-python3 scripts/confluence.py get-title 123456
+scripts/confluence-skill get-title 123456
 ```
 
 ### Example 4: Full Page Update (Title + Content)
 
 ```bash
 # Step 1: Get current content and title
-python3 scripts/confluence.py get-content 123456 > content.html
-python3 scripts/confluence.py get-title 123456
+scripts/confluence-skill get-content 123456 > content.html
+scripts/confluence-skill get-title 123456
 
 # Step 2: Edit content.html and prepare new title
 
 # Step 3: Update content
-python3 scripts/confluence.py set-content 123456 content.html
+scripts/confluence-skill set-content 123456 content.html
 
 # Step 4: Update title
-python3 scripts/confluence.py set-title 123456 "Updated Title"
+scripts/confluence-skill set-title 123456 "Updated Title"
 
 # Step 5: Verify
-python3 scripts/confluence.py get-title 123456
-python3 scripts/confluence.py get-version 123456
+scripts/confluence-skill get-title 123456
+scripts/confluence-skill get-version 123456
 ```
 
 ### Example 5: Working with Template Variables
@@ -347,7 +387,7 @@ Do not attempt to attach image file.
 To search pages containing text "ABAP" need execute
 
 ```bash
-python3 scripts/confluence.py search-text "ABAP"
+scripts/confluence-skill search-text "ABAP"
 ```
 The result will be a list of ID and Title for pages containing the word ABAP.
 
@@ -384,5 +424,3 @@ To see full API responses, check the script output. The script outputs errors to
 ## References
 
 - **Storage Format**: `references/storage-format-reference.md` - Complete Confluence Storage Format syntax
-- **Confluence REST API**: https://developer.atlassian.com/cloud/confluence/rest/
-- **API Token Setup**: https://developer.atlassian.com/cloud/confluence/building-connections-to-confluence/
